@@ -4,5 +4,6 @@
 int main(void) {
 
 // Codigo
+printf("Hello world\n");
 
 }
