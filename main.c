@@ -4,12 +4,13 @@
 #include <time.h>
 #include "arvore_binaria.h"
 #include "lista_seq.h"
+#include <ctype.h>
 
 #define TAMANHO 1000
 #define INPUT_BUFFER_SIZE 1024
 
 char *strsep(char **stringp, const char *delim);
-int prompt(int option);
+int prompt(int option, ListaSequencial* lista_seq, Arvore* arvore);
 
 
 int main(int argc, char ** argv) {
@@ -87,12 +88,12 @@ int main(int argc, char ** argv) {
 			char* word = (char*) malloc(sizeof(char)*25); 
 
 			for (int i=0; i<=25; i++) {
-				if(copia[i] == ' ') {
+				if(copia[i] == ' ' || copia[i] == ',' || copia[i] == '.' || copia[i] == ';') {
 					word[i] = '\0';	
 					break;
 				}
 				
-			 	word[i] = copia[i];
+			 	word[i] = tolower(copia[i]);
 			}
 
 			if (OPCAO == 0) insere(lista_seq, word);
@@ -115,9 +116,9 @@ int main(int argc, char ** argv) {
 	printf("Tempo para carregar o arquivo e construir o indice: %d ms\n", time_taken);
 
 	imprime_lista(lista_seq);
-	imprime_arvore(arvore);
+	// imprime_arvore(arvore);
 
-	prompt(OPCAO);
+	prompt(OPCAO, lista_seq, arvore);
 
 	return 1;
 }
@@ -137,7 +138,7 @@ char *strsep(char **stringp, const char *delim) {
 }
 
 
-int prompt(int option) {
+int prompt(int option, ListaSequencial* lista_seq, Arvore* arvore) {
 
 	char input[INPUT_BUFFER_SIZE];
 
@@ -186,8 +187,7 @@ int prompt(int option) {
 			}
 
 
-			// printf("%s\n", word);
-			if (option == 0) break; // BUSCA WORD LISTA
+			if (option == 0) busca(lista_seq, word); // BUSCA WORD LISTA
 			if (option == 1) break; // BUSCA WORD ARVORE
 
 		}
