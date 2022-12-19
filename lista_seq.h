@@ -32,7 +32,7 @@ void destroi_lista(ListaSequencial* lista){
 
 int busca(ListaSequencial* lista, Elemento e){
 
-	// busca binária! ;)
+	// busca binária!
 
 	int ini = 0;
 	int fim = lista->livre - 1;
@@ -42,27 +42,12 @@ int busca(ListaSequencial* lista, Elemento e){
 
 		meio = (ini + fim) / 2;
 
-		if(e == lista->elemento[meio] ) return meio;
-		if(e < lista->elemento[meio]) fim = meio - 1;
-		if(e > lista->elemento[meio]) ini = meio + 1;
+		if (strcmp(e, lista->elemento[meio]) == 0) return meio;
+		if (strcmp(e, lista->elemento[meio]) > 0) fim = meio - 1;
+		if (strcmp(e, lista->elemento[meio]) < 0) fim = meio + 1;
 	}
 		
 	return -1;
-}
-
-
-int for_recursivo_insere(ListaSequencial* lista, Elemento e, int j){
-	int i;
-	for(i = lista->livre; i > 0 && lista->elemento[i - 1][j] >= e[j]; i--){
-			
-			if (lista->elemento[i - 1][j] == e[j]) {
-				j++;
-				for_recursivo_insere(lista, e, j);
-			}
-		
-			lista->elemento[i] = lista->elemento[i - 1];
-		}
-	return i;
 }
 
 
@@ -71,9 +56,13 @@ Boolean insere(ListaSequencial* lista, Elemento e){
 	int i;
 	int j = 0;
 
+
 	if(lista->livre < lista->capacidade) {
 
-		i = for_recursivo_insere(lista, e, j);
+		for(i = lista->livre; i > 0 && ( strcmp(lista->elemento[i - 1], e) > 0 ); i--) {
+
+			lista->elemento[i] = lista->elemento[i - 1];
+		}
 
 		lista->elemento[i] = e;
 		lista->livre++;
