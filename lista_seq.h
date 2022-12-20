@@ -23,12 +23,6 @@ ListaSequencial* cria_lista(int capacidade){
 	return lista;
 }
 
-void destroi_lista(ListaSequencial* lista){
-
-	free(lista->elemento);
-	free(lista);
-}
-
 
 int busca(ListaSequencial* lista, Elemento e){
 
@@ -43,8 +37,8 @@ int busca(ListaSequencial* lista, Elemento e){
 		meio = (ini + fim) / 2;
 
 		if (strcmp(e, lista->elemento[meio]) == 0) return meio;
-		if (strcmp(e, lista->elemento[meio]) > 0) fim = meio - 1;
-		if (strcmp(e, lista->elemento[meio]) < 0) fim = meio + 1;
+		if (strcmp(e, lista->elemento[meio]) > 0) ini = meio + 1;
+		if (strcmp(e, lista->elemento[meio]) < 0) fim = meio - 1;
 	}
 		
 	return -1;
@@ -54,12 +48,13 @@ int busca(ListaSequencial* lista, Elemento e){
 Boolean insere(ListaSequencial* lista, Elemento e){
 
 	int i;
-	int j = 0;
 
 
 	if(lista->livre < lista->capacidade) {
 
-		for(i = lista->livre; i > 0 && ( strcmp(lista->elemento[i - 1], e) > 0 ); i--) {
+		for(i = lista->livre; i > 0 && (strcmp(lista->elemento[i - 1], e) > 0); i--) {
+
+			if ((lista->livre != 0) && (busca(lista, e) != -1)) return FALSE;
 
 			lista->elemento[i] = lista->elemento[i - 1];
 		}
@@ -87,4 +82,10 @@ void imprime_lista(ListaSequencial * lista){
 	}
 
 	printf("\n");
+}
+
+void destroi_lista(ListaSequencial* lista){
+
+	free(lista->elemento);
+	free(lista);
 }
