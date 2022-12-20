@@ -23,7 +23,7 @@ int main(int argc, char ** argv) {
 	char* quebra_de_linha;
 	char* palavra;	
 	int contador_linha;
-	clock_t start, stop;
+	struct timespec start, stop;
 	
 	char* tipo = argv[2];
 	int OPCAO = -1;		// 0 = lista e 1 = arvore
@@ -55,8 +55,10 @@ int main(int argc, char ** argv) {
 	}
 
 
+	// Obtain the start time
+	clock_gettime(CLOCK_REALTIME, &start);
+
 	// Arquivo de entrada
-	start = clock();
 	in = fopen(argv[1], "r");
 
 	contador_linha = 0;
@@ -75,6 +77,8 @@ int main(int argc, char ** argv) {
 
 		copia_ponteiro_linha = linha;
 
+		printf("%s \n", linha);
+
 		while( (palavra = strsep(&copia_ponteiro_linha, " ")) ){
 
 			// antes de guardar a palavra em algum tipo de estrutura usada
@@ -85,7 +89,7 @@ int main(int argc, char ** argv) {
 
 
 			char* copia = palavra;
-			char* word = (char*) malloc(sizeof(char)*25); 
+			char* word = (char*) malloc(sizeof(char)*25);
 
 			for (int i=0; i<=25; i++) {
 				if(copia[i] == ' ' || copia[i] == ',' || copia[i] == '.' || copia[i] == ';') {
@@ -96,24 +100,32 @@ int main(int argc, char ** argv) {
 			 	word[i] = tolower(copia[i]);
 			}
 
-			if (OPCAO == 0) insere(lista_seq, word);
-			if (OPCAO == 1) insere_ord(arvore, word);
 
+			if(*word != ' ') {
+				if (OPCAO == 0) insere(lista_seq, word);
+				if (OPCAO == 1) insere_ord(arvore, word);
+			}
+
+			
 		}
+
+
 
 		contador_linha++;
 	}
 	
 
-	stop = clock();
+	// Obtain the stop time
+	clock_gettime(CLOCK_REALTIME, &stop);
 
-	double time_taken = (double) (stop - start)/CLOCKS_PER_SEC*1000;
+	// Calculate the elapsed time in milliseconds
+	double time_taken = (stop.tv_sec - start.tv_sec) * 1000.0 + (stop.tv_nsec - start.tv_nsec) / 1000000.0;
 
 	
 	printf("Tipo de indice: '%s'\n", argv[2]);
 	printf("Arquivo texto: '%s'\n", argv[1]);
 	printf("Numero de linhas no arquivo: %i\n", contador_linha);
-	printf("Tempo para carregar o arquivo e construir o indice: %d ms\n", time_taken);
+	printf("Tempo para carregar o arquivo e construir o indice: %f ms\n", time_taken);
 
 	imprime_lista(lista_seq);
 	// imprime_arvore(arvore);
@@ -187,7 +199,7 @@ int prompt(int option, ListaSequencial* lista_seq, Arvore* arvore) {
 			}
 
 
-			if (option == 0) busca(lista_seq, word); // BUSCA WORD LISTA
+			if (option == 0) printf("%i\n", busca(lista_seq, word)); // BUSCA WORD LISTA
 			if (option == 1) break; // BUSCA WORD ARVORE
 
 		}
