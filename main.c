@@ -9,13 +9,13 @@
 #define TAMANHO 1000
 #define INPUT_BUFFER_SIZE 1024
 
-char *strsep(char **stringp, const char *delim);
-int prompt(int option, ListaSequencial* lista_seq, Arvore* arvore);
+char* strsep(char** stringp, const char* delim);
+int prompt(int option, Matriz* matriz, Arvore* arvore);
 
 
-int main(int argc, char ** argv) {
+int main(int argc, char** argv) {
 
-	ListaSequencial* lista_seq;
+	Matriz* matriz;
 	Arvore* arvore;
 	FILE* in;
 	char* linha;
@@ -39,7 +39,7 @@ int main(int argc, char ** argv) {
 	if (strcmp(tipo, "lista") == 0) {
 
 		OPCAO = 0;
-		lista_seq = cria_lista(TAMANHO);
+		matriz = cria_matriz(TAMANHO, 20);
 	}
 
 	
@@ -77,7 +77,7 @@ int main(int argc, char ** argv) {
 
 		copia_ponteiro_linha = linha;
 
-		printf("%s \n", linha);
+		// printf("%s \n", linha);
 
 		while( (palavra = strsep(&copia_ponteiro_linha, " ")) ){
 
@@ -87,29 +87,25 @@ int main(int argc, char ** argv) {
 			// substring dentro da string 'linha', e a cada nova linha lida
 			// o conteúdo da linha anterior é sobreescrito.
 
-
-			char* copia = palavra;
+			// inserir a palavra na matriz
 			char* word = (char*) malloc(sizeof(char)*25);
 
-			for (int i=0; i<=25; i++) {
-				if(copia[i] == ' ' || copia[i] == ',' || copia[i] == '.' || copia[i] == ';') {
+			for (int i=0; i<=20; i++) {
+				if(palavra[i] == ' ' || palavra[i] == ',' || palavra[i] == '.' || palavra[i] == ';') {
 					word[i] = '\0';	
 					break;
 				}
 				
-			 	word[i] = tolower(copia[i]);
+			 	word[i] = tolower(palavra[i]);
 			}
 
 
 			if(*word != ' ') {
-				if (OPCAO == 0) insere(lista_seq, word);
+				if (OPCAO == 0) insere(matriz, word);
 				if (OPCAO == 1) insere_ord(arvore, word);
 			}
 
-			
 		}
-
-
 
 		contador_linha++;
 	}
@@ -127,10 +123,10 @@ int main(int argc, char ** argv) {
 	printf("Numero de linhas no arquivo: %i\n", contador_linha);
 	printf("Tempo para carregar o arquivo e construir o indice: %f ms\n", time_taken);
 
-	imprime_lista(lista_seq);
+	// imprime_matriz(matriz);
 	// imprime_arvore(arvore);
 
-	prompt(OPCAO, lista_seq, arvore);
+	prompt(OPCAO, matriz, arvore);
 
 	return 1;
 }
@@ -150,7 +146,7 @@ char *strsep(char **stringp, const char *delim) {
 }
 
 
-int prompt(int option, ListaSequencial* lista_seq, Arvore* arvore) {
+int prompt(int option, Matriz* matriz, Arvore* arvore) {
 
 	char input[INPUT_BUFFER_SIZE];
 
@@ -190,16 +186,16 @@ int prompt(int option, ListaSequencial* lista_seq, Arvore* arvore) {
 			// Since 'busca' has 5 letters and a space   ->   busca word  -> length = 10, 10 - 6 = 4 + 1 '\0' = 5
 			char word[(length - 6) + 1];
 
-			// Copying the word from the input
+			// Copying the word from the input - Cuidado de retirar letras maiusculas
 			int j = 0;
 			int i = 0;
 			for (i=6; i<= length; i++) {
-				word[j] = input[i];
+				word[j] = tolower(input[i]);
 				j++;
 			}
 
 
-			if (option == 0) printf("%i\n", busca(lista_seq, word)); // BUSCA WORD LISTA
+			if (option == 0) printf("%i\n", busca(matriz, word)); // BUSCA WORD LISTA
 			if (option == 1) break; // BUSCA WORD ARVORE
 
 		}
