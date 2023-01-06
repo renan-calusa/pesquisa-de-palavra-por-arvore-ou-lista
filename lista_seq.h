@@ -6,6 +6,7 @@ typedef int Boolean;
 const int tamanho_da_palavra = 20;
 const int quantidade_linha = 25;
 double* search_time;
+extern char** ponteiros_linha;
 
 
 typedef struct aux_modulo {
@@ -140,10 +141,12 @@ void imprime_lista(Matriz* matriz, char* palavra, int indice) {
 		printf("Existem %i ocorrencias da palavra '%s' na(s) seguinte(s) linha(s):\n", matriz->lista_de_modulos[indice]->count, palavra);
 
 		// linhas
+
 		for (int i=0; i<quantidade_linha; i++) {
 			
 			int linha = matriz->lista_de_modulos[indice]->linha[i];
-			if(linha != -1) printf("%05d\n", linha+1);
+
+			if(linha != -1) printf("%05d: %s", linha + 1, ponteiros_linha[linha]);
 		}
 
 		printf("Tempo de busca: %.4f ms\n", *search_time);
