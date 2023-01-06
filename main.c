@@ -24,9 +24,11 @@ int main(int argc, char** argv) {
 	char* palavra;	
 	int contador_linha;
 	struct timespec start, stop;
+	search_time = (double*) malloc(sizeof(double));
 	
 	char* tipo = argv[2];
-	int OPCAO = -1;		// 0 = lista e 1 = arvore
+	// 0 = lista e 1 = arvore
+	int OPCAO = -1;
 
 
 	if (strcmp(tipo, "arvore") == 0) {
@@ -35,15 +37,13 @@ int main(int argc, char** argv) {
 	}
 
 
-
 	if (strcmp(tipo, "lista") == 0) {
 
 		OPCAO = 0;
-		matriz = cria_matriz(TAMANHO, 20);
+		matriz = cria_matriz(TAMANHO);
 	}
 
 	
-
 	/* --------------------------------------------------------------------------------------------------------- */
 
 
@@ -70,25 +70,12 @@ int main(int argc, char** argv) {
 
 		// printf("linha %03d: '%s'\n", contador_linha + 1, linha);
 
-		// fazemos uma copia do endereço que corresponde ao array de chars 
-		// usado para armazenar cada linha lida do arquivo pois a função 'strsep' 
-		// modifica o endereço do ponteiro a cada chamada feita a esta função (e 
-		// não queremos que 'linha' deixe de apontar para o inicio do array).
-
 		copia_ponteiro_linha = linha;
-
-		// printf("%s \n", linha);
 
 		while( (palavra = strsep(&copia_ponteiro_linha, " ")) ){
 
-			// antes de guardar a palavra em algum tipo de estrutura usada
-			// para implementar o índice, será necessário fazer uma copia
-			// da mesma, uma vez que o ponteiro 'palavra' aponta para uma 
-			// substring dentro da string 'linha', e a cada nova linha lida
-			// o conteúdo da linha anterior é sobreescrito.
-
 			// inserir a palavra na matriz
-			char* word = (char*) malloc(sizeof(char)*25);
+			char* word = (char*) malloc(sizeof(char)*tamanho_da_palavra);
 
 			for (int i=0; i<=20; i++) {
 				if(palavra[i] == ' ' || palavra[i] == ',' || palavra[i] == '.' || palavra[i] == ';') {
@@ -99,7 +86,7 @@ int main(int argc, char** argv) {
 			 	word[i] = tolower(palavra[i]);
 			}
 
-
+			// Se a palavra for 'nao nula', insere na estrutura
 			if(*word != ' ') {
 				if (OPCAO == 0) insere(matriz, word);
 				if (OPCAO == 1) insere_ord(arvore, word);
@@ -195,8 +182,20 @@ int prompt(int option, Matriz* matriz, Arvore* arvore) {
 			}
 
 
-			if (option == 0) printf("%i\n", busca(matriz, word)); // BUSCA WORD LISTA
-			if (option == 1) break; // BUSCA WORD ARVORE
+			if (option == 0) {
+
+				// BUSCA WORD LISTA
+				int indice_aux = busca(matriz, word);
+				printf("%i\n", indice_aux);
+				imprime_lista(matriz, word, indice_aux);
+			}
+
+
+			if (option == 1) {
+				
+				// BUSCA WORD ARVORE
+				break;
+			}
 
 		}
 
