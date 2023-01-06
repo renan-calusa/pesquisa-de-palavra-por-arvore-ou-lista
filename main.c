@@ -8,6 +8,7 @@
 
 #define TAMANHO 1000
 #define INPUT_BUFFER_SIZE 1024
+char** ponteiros_linha;
 
 char* strsep(char** stringp, const char* delim);
 int prompt(int option, Matriz* matriz, Arvore* arvore);
@@ -25,6 +26,7 @@ int main(int argc, char** argv) {
 	int contador_linha;
 	struct timespec start, stop;
 	search_time = (double*) malloc(sizeof(double));
+	ponteiros_linha = (char**) malloc(sizeof(char*)*quantidade_linha);
 	
 	char* tipo = argv[2];
 	// 0 = lista e 1 = arvore
@@ -64,11 +66,19 @@ int main(int argc, char** argv) {
 	contador_linha = 0;
 	linha = (char*) malloc((TAMANHO + 1) * sizeof(char));
 
+	int j = 0;
+
 	while(in && fgets(linha, TAMANHO, in)){
+
+		// Copiar a linha, para nao ser afetada pelo strrchr e strsep
+		char* copia_linha;
+		copia_linha = strdup(linha);
+
+		ponteiros_linha[j] = copia_linha;
+		j++;
+		
 		
 		if( (quebra_de_linha = strrchr(linha, '\n')) ) *quebra_de_linha = 0;
-
-		// printf("linha %03d: '%s'\n", contador_linha + 1, linha);
 
 		copia_ponteiro_linha = linha;
 
@@ -77,6 +87,7 @@ int main(int argc, char** argv) {
 			// inserir a palavra na matriz
 			char* word = (char*) malloc(sizeof(char)*tamanho_da_palavra);
 
+			// Retirando pontuacoes desnecessarias
 			for (int i=0; i<=20; i++) {
 				if(palavra[i] == ' ' || palavra[i] == ',' || palavra[i] == '.' || palavra[i] == ';') {
 					word[i] = '\0';	
@@ -108,7 +119,7 @@ int main(int argc, char** argv) {
 	printf("Tipo de indice: '%s'\n", argv[2]);
 	printf("Arquivo texto: '%s'\n", argv[1]);
 	printf("Numero de linhas no arquivo: %i\n", contador_linha);
-	printf("Tempo para carregar o arquivo e construir o indice: %f ms\n", time_taken);
+	printf("Tempo para carregar o arquivo e construir o indice: %.4f ms\n", time_taken);
 
 	// imprime_arvore(arvore);
 
