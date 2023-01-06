@@ -3,6 +3,10 @@
 
 
 typedef int Boolean;
+const int tamanho_da_palavra = 20;
+const int quantidade_linha = 25;
+double* search_time;
+
 
 typedef struct aux_modulo {
 
@@ -22,7 +26,7 @@ typedef struct aux_matriz {
 } Matriz;
 
 
-Matriz* cria_matriz(int tamanho_matriz, int quantidade_linha) {
+Matriz* cria_matriz(int tamanho_matriz) {
 
 	Matriz* matriz = malloc(sizeof(Matriz)*tamanho_matriz);
 
@@ -33,7 +37,7 @@ Matriz* cria_matriz(int tamanho_matriz, int quantidade_linha) {
 	for(int i=0; i<tamanho_matriz; i++) {
 		
 		matriz->lista_de_modulos[i] = (Modulo*) malloc(sizeof(Modulo));
-		matriz->lista_de_modulos[i]->word = (char*) malloc(sizeof(char)*20);
+		matriz->lista_de_modulos[i]->word = (char*) malloc(sizeof(char)*tamanho_da_palavra);
 		matriz->lista_de_modulos[i]->count = 0;
 		matriz->lista_de_modulos[i]->linha = (int*) malloc(sizeof(int)*quantidade_linha);
 		// prevenir lixo de memoria
@@ -49,6 +53,9 @@ Boolean busca(Matriz* matriz, char* palavra) {
 	int ini = 0;
 	int fim = matriz->livre - 1;
 	int meio;
+	struct timespec strt, stp;
+
+	clock_gettime(CLOCK_REALTIME, &strt);
 
 	while(ini <= fim){
 
@@ -58,7 +65,11 @@ Boolean busca(Matriz* matriz, char* palavra) {
 		if (strcmp(palavra, matriz->lista_de_modulos[meio]->word) > 0) ini = meio + 1;
 		if (strcmp(palavra, matriz->lista_de_modulos[meio]->word) < 0) fim = meio - 1;
 	}
-		
+	
+	clock_gettime(CLOCK_REALTIME, &stp);
+
+	*search_time = (stp.tv_sec - strt.tv_sec) * 1000.0 + (stp.tv_nsec - strt.tv_nsec) / 1000000.0;
+
 	return -1;
 }
 
@@ -66,9 +77,11 @@ Boolean busca(Matriz* matriz, char* palavra) {
 Boolean insere(Matriz* matriz, char* palavra){
 
 	// Verificar, numa lista nao vazia, a existencia de elemento repetido
-	if ((matriz->livre != 0) && (busca(matriz, palavra) != -1)) {
+	int aux = busca(matriz, palavra);
+	if ((matriz->livre != 0) && (aux != -1)) {
 				
-		// Colocar a linha da palavra repetida na lista de linhas da palavra (...)
+		// Colocar a linha da palavra repetida na lista de linhas da palavra
+		matriz->lista_de_modulos[aux]->count++;
 		return FALSE;
 	}
 
@@ -84,6 +97,7 @@ Boolean insere(Matriz* matriz, char* palavra){
 
 		matriz->lista_de_modulos[i]->word = palavra;
 		matriz->livre++;
+		matriz->lista_de_modulos[i]->count++;
 
 		return TRUE;
 	}
@@ -92,14 +106,21 @@ Boolean insere(Matriz* matriz, char* palavra){
 }
 
 
-void imprime_matriz(Matriz* matriz){
+void imprime_lista(Matriz* matriz, char* palavra, int indice) {
 
-	printf("Lista:");
+	if (!(indice == -1)) {
 
-	for(int i = 0; i < matriz->livre; i++){
+		printf("Existem %i ocorrencias da palavra '%s' na(s) seguinte(s) linha(s):\n", matriz->lista_de_modulos[indice]->count, palavra);
 
-		printf(" %s", matriz->lista_de_modulos[i]->word);
+		// linhas
+
+		printf("Tempo de busca: %f ms\n", *search_time);
 	}
 
-	printf("\n");
+
+	else {
+
+		printf("Palavra '%s' nao encontrada.\n", palavra);
+		printf("Tempo de busca: %f ms\n", *search_time);
+	}
 }
