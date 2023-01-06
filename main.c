@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
 
 			// Se a palavra for 'nao nula', insere na estrutura
 			if(*word != ' ') {
-				if (OPCAO == 0) insere(matriz, word);
+				if (OPCAO == 0) insere_matriz(matriz, word, contador_linha);
 				if (OPCAO == 1) insere_ord(arvore, word);
 			}
 
@@ -110,7 +110,6 @@ int main(int argc, char** argv) {
 	printf("Numero de linhas no arquivo: %i\n", contador_linha);
 	printf("Tempo para carregar o arquivo e construir o indice: %f ms\n", time_taken);
 
-	// imprime_matriz(matriz);
 	// imprime_arvore(arvore);
 
 	prompt(OPCAO, matriz, arvore);
@@ -185,8 +184,7 @@ int prompt(int option, Matriz* matriz, Arvore* arvore) {
 			if (option == 0) {
 
 				// BUSCA WORD LISTA
-				int indice_aux = busca(matriz, word);
-				printf("%i\n", indice_aux);
+				int indice_aux = busca_matriz(matriz, word);
 				imprime_lista(matriz, word, indice_aux);
 			}
 
