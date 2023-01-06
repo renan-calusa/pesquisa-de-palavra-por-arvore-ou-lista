@@ -88,6 +88,12 @@ Boolean insere_matriz(Matriz* matriz, char* palavra, int line){
 		matriz->lista_de_modulos[aux]->count++;
 
 		int livre = matriz->lista_de_modulos[aux]->sentinela;
+
+		// retornar falso caso a linha ja esteja na lista de linhas
+		for (int k=livre; k>=0; k--) {
+			if (matriz->lista_de_modulos[aux]->linha[k] == line) return FALSE;
+		}
+
 		matriz->lista_de_modulos[aux]->linha[livre] = line;
 		matriz->lista_de_modulos[aux]->sentinela++;
 
@@ -137,16 +143,16 @@ void imprime_lista(Matriz* matriz, char* palavra, int indice) {
 		for (int i=0; i<quantidade_linha; i++) {
 			
 			int linha = matriz->lista_de_modulos[indice]->linha[i];
-			if(linha != -1) printf("%i\n", linha+1);
+			if(linha != -1) printf("%05d\n", linha+1);
 		}
 
-		printf("Tempo de busca: %f ms\n", *search_time);
+		printf("Tempo de busca: %.4f ms\n", *search_time);
 	}
 
 
 	else {
 
 		printf("Palavra '%s' nao encontrada.\n", palavra);
-		printf("Tempo de busca: %f ms\n", *search_time);
+		printf("Tempo de busca: %.4f ms\n", *search_time);
 	}
 }
