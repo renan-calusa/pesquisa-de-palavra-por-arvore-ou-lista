@@ -50,13 +50,13 @@ int main(int argc, char** argv) {
 	}
 
 
-	if (strcmp(tipo, "lista") == 0) {
+	else if (strcmp(tipo, "lista") == 0) {
 
 		OPCAO = 0;
 		matriz = cria_matriz(TAMANHO);
 	}
 
-	if (strcmp(tipo, "arvore") != 0 && strcmp(tipo, "lista") != 0) {
+	else {
 
 		printf("[-] Erro no(s) argumento(s)! Verifique se digitou o nome do arquivo de texto ou o nome da estrutura corretamente!\n");
 		return 0;
@@ -98,9 +98,10 @@ int main(int argc, char** argv) {
 			char* word = (char*) malloc(sizeof(char)*tamanho_da_palavra);
 
 			// Retirando pontuacoes desnecessarias
-			for (int i=0; i<=20; i++) {
-				if(palavra[i] == ' ' || palavra[i] == ',' || palavra[i] == '.' || palavra[i] == ';') {
-					word[i] = '\0';	
+			for (int i=0; i<=tamanho_da_palavra; i++) {
+
+				if(palavra[i] < '0' || palavra[i] > '9' && palavra[i] < 'A' || palavra[i] > 'Z' && palavra[i] < 'a' || palavra[i] > 'z') {
+					word[i] = '\0';
 					break;
 				}
 				
