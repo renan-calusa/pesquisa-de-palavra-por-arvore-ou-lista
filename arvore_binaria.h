@@ -41,10 +41,6 @@ Arvore* cria_arvore(){
 
 No* busca_arvore_rec(No* no, char* palavra){
 
-	struct timespec strt, stp;
-
-	clock_gettime(CLOCK_REALTIME, &strt);
-
 	if(no){
 
 		if(strcmp(no->word, palavra) == 0) return no;
@@ -52,17 +48,23 @@ No* busca_arvore_rec(No* no, char* palavra){
 		return busca_arvore_rec(no->dir, palavra);
 	}
 
-	clock_gettime(CLOCK_REALTIME, &stp);
-
-	*search_time = (stp.tv_sec - strt.tv_sec) * 1000.0 + (stp.tv_nsec - strt.tv_nsec) / 1000000.0;
-
 	return NULL;
 }
 
 
 No* busca_arvore(Arvore* arvore, char* palavra){
 	
-	return busca_arvore_rec(arvore->raiz, palavra);	
+	struct timespec strt, stp;
+
+	clock_gettime(CLOCK_REALTIME, &strt);
+
+	No* resultado = busca_arvore_rec(arvore->raiz, palavra);
+
+	clock_gettime(CLOCK_REALTIME, &stp);
+
+	*search_time = (stp.tv_sec - strt.tv_sec) * 1000.0 + (stp.tv_nsec - strt.tv_nsec) / 1000000.0;
+
+	return resultado;
 }
 
 
