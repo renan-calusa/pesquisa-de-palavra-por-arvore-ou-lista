@@ -8,6 +8,8 @@
 
 #define TAMANHO 1000
 #define INPUT_BUFFER_SIZE 1024
+int tamanho_da_palavra = 20;
+int quantidade_linha = 25;
 char** ponteiros_linha;
 
 char* strsep(char** stringp, const char* delim);
@@ -34,6 +36,7 @@ int main(int argc, char** argv) {
 
 
 	if (strcmp(tipo, "arvore") == 0) {
+
 		OPCAO = 1;
 		arvore = cria_arvore();
 	}
@@ -43,6 +46,12 @@ int main(int argc, char** argv) {
 
 		OPCAO = 0;
 		matriz = cria_matriz(TAMANHO);
+	}
+
+	else {
+
+		printf("[-] Erro no(s) argumento(s)!\nVerifique se digitou o nome do arquivo de texto ou o nome da estrutura corretamente!\n");
+		return 0;
 	}
 
 	
@@ -84,7 +93,7 @@ int main(int argc, char** argv) {
 
 		while( (palavra = strsep(&copia_ponteiro_linha, " ")) ){
 
-			// inserir a palavra na matriz
+			// inserir a palavra nas estruturas
 			char* word = (char*) malloc(sizeof(char)*tamanho_da_palavra);
 
 			// Retirando pontuacoes desnecessarias
@@ -100,7 +109,7 @@ int main(int argc, char** argv) {
 			// Se a palavra for 'nao nula', insere na estrutura
 			if(*word != ' ') {
 				if (OPCAO == 0) insere_matriz(matriz, word, contador_linha);
-				if (OPCAO == 1) insere_ord(arvore, word);
+				if (OPCAO == 1) insere_arvore(arvore, word, contador_linha);
 			}
 
 		}
@@ -120,8 +129,6 @@ int main(int argc, char** argv) {
 	printf("Arquivo texto: '%s'\n", argv[1]);
 	printf("Numero de linhas no arquivo: %i\n", contador_linha);
 	printf("Tempo para carregar o arquivo e construir o indice: %.4f ms\n", time_taken);
-
-	// imprime_arvore(arvore);
 
 	prompt(OPCAO, matriz, arvore);
 
@@ -203,7 +210,8 @@ int prompt(int option, Matriz* matriz, Arvore* arvore) {
 			if (option == 1) {
 				
 				// BUSCA WORD ARVORE
-				break;
+				No* indice_aux = busca_arvore(arvore, word);
+				imprime_arvore(arvore, word, indice_aux);
 			}
 
 		}
