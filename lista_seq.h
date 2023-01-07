@@ -3,8 +3,8 @@
 
 
 typedef int Boolean;
-const int tamanho_da_palavra = 20;
-const int quantidade_linha = 25;
+extern int tamanho_da_palavra;
+extern int quantidade_linha;
 double* search_time;
 extern char** ponteiros_linha;
 
