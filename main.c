@@ -29,12 +29,19 @@ int main(int argc, char** argv) {
 	struct timespec start, stop;
 	search_time = (double*) malloc(sizeof(double));
 	ponteiros_linha = (char**) malloc(sizeof(char*)*quantidade_linha);
+
+
+	// Verificando se faltam argumentos
+	if(argc < 3) {
+
+		printf("Falta argumentos!\n(Usage: ./script 'arquivo.txt' 'tipo de estrutura')\n");
+		return 0;
+	}
+
 	
 	char* tipo = argv[2];
 	// 0 = lista e 1 = arvore
 	int OPCAO = -1;
-
-	printf("tipo: '%s'\n", tipo);
 
 	if (strcmp(tipo, "arvore") == 0) {
 
@@ -51,20 +58,13 @@ int main(int argc, char** argv) {
 
 	if (strcmp(tipo, "arvore") != 0 && strcmp(tipo, "lista") != 0) {
 
-		printf("[-] Erro no(s) argumento(s)!\nVerifique se digitou o nome do arquivo de texto ou o nome da estrutura corretamente!\n");
+		printf("[-] Erro no(s) argumento(s)! Verifique se digitou o nome do arquivo de texto ou o nome da estrutura corretamente!\n");
 		return 0;
 	}
 
 	
 	/* --------------------------------------------------------------------------------------------------------- */
 
-
-	// Verificando se faltam argumentos
-	if(argc < 2) {
-
-		printf("Falta argumentos!\n(Usage: ./script 'arquivo.txt' 'tipo de estrutura')\n");
-		return 0;
-	}
 
 
 	// Obtain the start time
