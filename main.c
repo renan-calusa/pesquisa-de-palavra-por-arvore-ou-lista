@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
 	// 0 = lista e 1 = arvore
 	int OPCAO = -1;
 
+	printf("tipo: '%s'\n", tipo);
 
 	if (strcmp(tipo, "arvore") == 0) {
 
@@ -48,7 +49,7 @@ int main(int argc, char** argv) {
 		matriz = cria_matriz(TAMANHO);
 	}
 
-	else {
+	if (strcmp(tipo, "arvore") != 0 && strcmp(tipo, "lista") != 0) {
 
 		printf("[-] Erro no(s) argumento(s)!\nVerifique se digitou o nome do arquivo de texto ou o nome da estrutura corretamente!\n");
 		return 0;
